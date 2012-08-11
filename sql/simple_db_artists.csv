@@ -1,0 +1,5 @@
+Contains sample values for the "simple" database table "artists".
+Values separated by comma. First two lines ignored.
+1, Title 1, Artist 1, Performer 1, 1
+1, Title 2, Artist 2, \N, 2
+

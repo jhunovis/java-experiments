@@ -15,6 +15,6 @@ load data local infile 'simple_db_albums.csv'
 load data local infile 'simple_db_artists.csv'
 	ignore
 	into table simple.songs
-	optionally enclosed by '"'	
 	fields terminated by ','
+	optionally enclosed by '"'	
 	ignore 2 lines;

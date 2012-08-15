@@ -19,20 +19,39 @@ public class AlbumWithAnnotationsTest {
 	private static Configuration mConfig;
 	private static SessionFactory mSessionFactory;
 
-	@BeforeClass
+	// @BeforeClass
 	@SuppressWarnings("deprecation")
-	public static void setupHibernateConfig(){
+	public static void setupHibernateMySQLConfig(){
 		mConfig = new Configuration();
 		mConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
 		mConfig.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/simple");
 		mConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");		
 		mConfig.setProperty("hibernate.connection.username", "hibernate");
 		mConfig.setProperty("hibernate.connection.password", "");
-		mConfig.setProperty("hibernate.connection.pool_size", "10");	
+		mConfig.setProperty("hibernate.connection.pool_size", "1");	
 		mConfig.addAnnotatedClass(AlbumWithAnnotations.class);
 		mSessionFactory = mConfig.buildSessionFactory();
 	}
 	
+	@BeforeClass
+	@SuppressWarnings("deprecation")
+	public static void setupHibernateH2Config(){
+		mConfig = new Configuration();
+		mConfig.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
+		mConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+		mConfig.setProperty("hibernate.connection.url", "jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE");		
+		mConfig.setProperty("hibernate.connection.username", "sa");
+		mConfig.setProperty("hibernate.connection.password", "");
+		mConfig.setProperty("hibernate.connection.pool_size", "1");
+		// Disable the second-level cache
+		mConfig.setProperty("cache.provider_class","org.hibernate.cache.internal.NoCacheProvider");
+		// Echo all executed SQL to stdout
+		mConfig.setProperty("show_sql","true"); 
+		// Drop and re-create the database schema on startup
+		mConfig.setProperty("hibernate.hbm2ddl.auto","create-drop");
+		mConfig.addAnnotatedClass(AlbumWithAnnotations.class);
+		mSessionFactory = mConfig.buildSessionFactory();
+	}
 
 	@AfterClass
 	public static void tearDown(){

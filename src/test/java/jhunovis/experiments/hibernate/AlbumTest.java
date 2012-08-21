@@ -1,7 +1,7 @@
-package jhunovis.example.hibernate.test;
+package jhunovis.experiments.hibernate;
 
 import static org.junit.Assert.fail;
-import jhunovis.example.hibernate.Album;
+import jhunovis.experiments.hibernate.Album;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

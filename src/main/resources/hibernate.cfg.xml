@@ -32,7 +32,7 @@
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
 
         
-        <mapping class="jhunovis.example.hibernate.annotations.Album"/>
+        <mapping class="jhunovis.experiments.hibernate.Album"/>
            
 
     </session-factory>

@@ -1,4 +1,4 @@
-package jhunovis.example.hibernate;
+package jhunovis.experiments.hibernate;
 
 import java.io.Serializable;
 import javax.persistence.Column;

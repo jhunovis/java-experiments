@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
  
 @Entity
 @Table(name="albums")
-public class AlbumWithAnnotations implements Serializable{
+public class Album implements Serializable{
 
 		private String mTitle;
 		private String mPublisher;

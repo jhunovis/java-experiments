@@ -1,12 +1,9 @@
 package jhunovis.experiments.hibernate;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -14,7 +11,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name="albums")
 public class Album implements Serializable{
-
+		
+		private static final long serialVersionUID = 1L;		
 		private String mTitle;
 		private String mPublisher;
 		private int mId;

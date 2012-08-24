@@ -1,5 +1,7 @@
 package de.examples.bowling;
 
+import java.util.ArrayList;
+
 public class BowlingGame {
 
 	private int[][] mFrames = new int[12][2];
@@ -12,7 +14,10 @@ public class BowlingGame {
 			mFrames[i][1] = 0;
 		}
 	}
+	
+	private ArrayList<Integer> mRolls = new ArrayList<Integer>();
 
+	
 	public void addRoll(int roll) throws BowlingException {
 		if (isComplete())
 			throw new BowlingException("No more rolls allowed.");

@@ -2,6 +2,9 @@ package de.examples.bowling;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -138,9 +141,40 @@ public class BowlingGameTest {
 	@Test
 	public void strikesAndSpares() {
 		BowlingGame game = new BowlingGame();
-		game.addRoll(5);
-		assert !game.isSpare(0);
+		try{
+			game.addRoll(5);
+			assert !game.isSpare(0);
+			assert !game.isStrike(0);
+			
+			game.addRoll(5);
+			assert game.isSpare(0);
+			assert !game.isStrike(0);
+
+			game.addRoll(10);
+			assert !game.isSpare(0);
+			assert game.isStrike(0);
+
+		}catch(BowlingException ex) {
+			ex.printStackTrace();
+			fail("Caught bowling exception: " + ex.getMessage());			
+		}
 	}
+
+ 
+	@Test 
+	public void score() throws BowlingException{
+		List<int[]> testGames = new ArrayList<int[]>();		
+		testGames.add( new int[] {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10});
+		int[] testGame;
+		
+		BowlingGame game = new BowlingGame();
+		testGame = testGames.get(0);
+		for (int roll:testGame){
+			game.addRoll(roll);				
+		}
+		assertEquals(300, game.getScore());
+	}
+	
 	/*
 	 * @Test public void completeFrames() { BowlingGame game = new
 	 * BowlingGame(new int[] { 10, 10, 10, 10, 10, 10, 10, 10, 10 });

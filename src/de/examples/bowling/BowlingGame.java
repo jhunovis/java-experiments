@@ -8,12 +8,9 @@ public class BowlingGame {
 
 	{
 		for (int i = 0; i < mFrames.length; i++) {
-			mFrames[i][0] = -1;
-			mFrames[i][1] = -1;
+			mFrames[i][0] = 0;
+			mFrames[i][1] = 0;
 		}
-	}
-
-	public BowlingGame() {
 	}
 
 	public void addRoll(int roll) throws BowlingException {
@@ -83,7 +80,15 @@ public class BowlingGame {
 
 	/** **/
 	public int getScore() {
-		return 0;
+		int score = 0;
+		for (int i = 0; i < 10; i++) {
+			if (isStrike(i)) {
+				score += 10 + mFrames[i+1][0] + mFrames[i+1][1];  
+			} else if (isSpare(i)) {
+				score += 10 + mFrames[i+1][0];
+			} else score += mFrames[i][0] + mFrames[i][1];
+		}
+		return score;
 	}
 
 	private int getRollOfFrame(int roll, int frame)

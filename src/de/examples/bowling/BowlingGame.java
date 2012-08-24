@@ -1,37 +1,62 @@
 package de.examples.bowling;
 
-import java.util.ArrayList;
-
 public class BowlingGame {
-
-	private int[][] mFrames = new int[12][2];
-	private int mCurrentFrame = 0;
-	private boolean mFirstRoll = true;
-
+	
+	private enum FrameState {NOT_ROLLED, FIRST_ROLLED, NORMAL, SPARE, STRIKE};
+	private FrameState[] mFrameState = new FrameState[10];
 	{
-		for (int i = 0; i < mFrames.length; i++) {
-			mFrames[i][0] = 0;
-			mFrames[i][1] = 0;
+		for (int i=0; i<10; i++) mFrameState[i] = FrameState.NOT_ROLLED;
+	}
+	private int[] mRolls = new int[2*10+2];
+	private int mCurrentRoll = 0;
+	private int mCurrentFrame = 0;
+	private int mExtraRolls = 0;
+	private boolean mFramesComplete = false;
+
+	
+	public BowlingGame() {	
+	}
+
+	public BowlingGame(int[] rolls) throws BowlingException{
+		for (int roll:rolls) {
+			addRoll(roll);
 		}
 	}
-	
-	private ArrayList<Integer> mRolls = new ArrayList<Integer>();
 
+	private void nextFrame() {
+		if (mCurrentFrame < 9) mCurrentFrame++;
+		else {
+			switch (mFrameState[mCurrentFrame]){
+			case SPARE: mExtraRolls = 1;break;
+			case STRIKE: mExtraRolls = 2;break;
+			default: break;
+			}
+			mFramesComplete  = true;
+		}
+	}
 	
 	public void addRoll(int roll) throws BowlingException {
 		if (isComplete())
 			throw new BowlingException("No more rolls allowed.");
 		if (roll < 0 || roll > 10)
-			throw new BowlingException("Roll out of bounds.");
-		if (mFirstRoll) {
-			mFrames[mCurrentFrame][0] = roll;
+			throw new BowlingException("Roll out of bounds.");		
+		if ( mExtraRolls > 0 ) {
+			mRolls[mCurrentRoll++] = roll;
+			mExtraRolls--;
+		} else if ( mFrameState[mCurrentFrame] != FrameState.FIRST_ROLLED) {
+			mRolls[mCurrentRoll++] = roll;
 			// next frame, if strike,
-			if (roll == 10)	mCurrentFrame++;
-			else mFirstRoll = false;
-		} else if (roll + mFrames[mCurrentFrame][0] <= 10) {
-			mFrames[mCurrentFrame][1] = roll;
-			mFirstRoll = true;
-			mCurrentFrame++;
+			if (roll == 10){
+				mFrameState[mCurrentFrame] = FrameState.STRIKE;
+				nextFrame();
+			}
+			else mFrameState[mCurrentFrame] = FrameState.FIRST_ROLLED;
+		}  else if (roll + mRolls[mCurrentRoll-1] <= 10) {
+			mRolls[mCurrentRoll] = roll;
+			if (roll +  mRolls[mCurrentRoll-1] == 10) mFrameState[mCurrentFrame] = FrameState.SPARE;
+			else mFrameState[mCurrentFrame] = FrameState.NORMAL;
+			mCurrentRoll++;
+			nextFrame();
 		} else
 			throw new BowlingException("Frame out of bounds.");
 	}
@@ -42,15 +67,8 @@ public class BowlingGame {
 	 * @return true, only if last frame was played. No more rolls are allowed
 	 *         then.
 	 **/
-	public boolean isComplete() {
-		if (mCurrentFrame == 10) {
-			if (mFirstRoll) {
-				return !(isSpare(9) || isStrike(9));
-			} else {
-				return !isStrike(9);
-			}
-		} else
-			return false;
+	public boolean isComplete() {		
+		return mFramesComplete && mExtraRolls == 0;
 	}
 
 	/**
@@ -61,7 +79,7 @@ public class BowlingGame {
 	 * @return true if frame was a strike.
 	 */
 	public boolean isStrike(int frame) {
-		return mFrames[frame][0] == 10;
+		return mFrameState[frame] == FrameState.STRIKE; 
 	}
 
 	/**
@@ -72,46 +90,23 @@ public class BowlingGame {
 	 * @return true if frame was a strike.
 	 */
 	public boolean isSpare(int frame) {
-		return !isStrike(frame) && mFrames[frame][0] + mFrames[frame][1] == 10;
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		return mFrameState[frame] == FrameState.SPARE;
 	}
 
 	/** **/
 	public int getScore() {
+		int roll = 0;
 		int score = 0;
-		for (int i = 0; i < 10; i++) {
-			if (isStrike(i)) {
-				score += 10 + mFrames[i+1][0] + mFrames[i+1][1];  
-			} else if (isSpare(i)) {
-				score += 10 + mFrames[i+1][0];
-			} else score += mFrames[i][0] + mFrames[i][1];
+		for (int frame = 0; frame < 10; frame++) {
+			switch (mFrameState[frame]) {
+			case FIRST_ROLLED: score += mRolls[roll++]; break;
+			case NORMAL: score += mRolls[roll++] + mRolls[roll++];break; 
+			case SPARE: roll += 2; score += 10 + mRolls[roll];break;
+			case STRIKE: roll++; score += 10 + mRolls[roll] + mRolls[roll+1]; break;			
+			case NOT_ROLLED: return score;				
+			}
 		}
 		return score;
-	}
-
-	private int getRollOfFrame(int roll, int frame)
-			throws IndexOutOfBoundsException {
-		if (frame >= 0 && frame <= 11) {
-			return mFrames[frame][roll];
-		} else {
-			throw new IndexOutOfBoundsException(
-					"Frame number must be between 0 and 10");
-		}
-	}
-
-	public int getFirstRollOfFrame(int frame) throws IndexOutOfBoundsException {
-		return getRollOfFrame(0, frame);
-	}
-
-	public int getSecondRollOfFrame(int frame) throws IndexOutOfBoundsException {
-		return getRollOfFrame(1, frame);
 	}
 
 }

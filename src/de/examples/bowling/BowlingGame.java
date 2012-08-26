@@ -3,6 +3,7 @@ package de.examples.bowling;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/** Compute the score of a bowling game. **/
 public class BowlingGame {
 
 	/*

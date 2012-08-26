@@ -65,182 +65,135 @@ public class BowlingGameTest {
 	}
 
 	@Test
-	public void isComplete() {
+	public void gameProgress() throws BowlingException {
 		BowlingGame game = new BowlingGame();
-		try {
-			for (int i = 0; i < 9; i++) {
-				assertEquals(i+1, game.getCurrentFrame());
-				assertEquals(1, game.getCurrentRoll());
-				game.addRoll(2);				
-				assertTrue(!game.isComplete());
 
-				assertEquals(2, game.getCurrentRoll());
-				game.addRoll(3);
-				assertTrue(!game.isComplete());
-			}
-			
-			assertEquals(10, game.getCurrentFrame());
+		for (int i = 0; i < 9; i++) {
+			assertEquals(i + 1, game.getCurrentFrame());
 			assertEquals(1, game.getCurrentRoll());
-			game.addRoll(4);
+			game.addRoll(2);
 			assertTrue(!game.isComplete());
 
 			assertEquals(2, game.getCurrentRoll());
-			game.addRoll(5);
-			assertTrue(game.isComplete());
-			
-			// 10th frame is spare
-			game = new BowlingGame();
-			for (int i = 0; i < 9; i++) {
-				game.addRoll(2);
-				game.addRoll(3);			
-			}
-			assertEquals(10, game.getCurrentFrame());
-			assertEquals(1, game.getCurrentRoll());
-			game.addRoll(4);			
+			game.addRoll(3);
 			assertTrue(!game.isComplete());
-			
-			assertEquals(2, game.getCurrentRoll());
-			game.addRoll(6);
-			assertTrue(!game.isComplete());
-			
-			assertEquals(11, game.getCurrentFrame());
-			assertEquals(1, game.getCurrentRoll());
-			game.addRoll(7);
-			assertTrue(game.isComplete());
+		}
 
-			// 10th frame is strike
-			game = new BowlingGame();
-			for (int i = 0; i < 9; i++) {
-				game.addRoll(2);
-				game.addRoll(3);			
-			}
-			
-			assertEquals(10, game.getCurrentFrame());
-			assertEquals(1, game.getCurrentRoll());
-			game.addRoll(10);			
-			assertTrue(!game.isComplete());
+		assertEquals(10, game.getCurrentFrame());
+		assertEquals(1, game.getCurrentRoll());
+		game.addRoll(4);
+		assertTrue(!game.isComplete());
 
-			// extra rolls count as 11th frame
-			assertEquals(11, game.getCurrentFrame());
-			assertEquals(1, game.getCurrentRoll());
-			game.addRoll(10);	
-			assertTrue(!game.isComplete());
+		assertEquals(2, game.getCurrentRoll());
+		game.addRoll(5);
+		assertTrue(game.isComplete());
 
-			assertEquals(11, game.getCurrentFrame());
-			assertEquals(2, game.getCurrentRoll());
-			game.addRoll(10);
-			assertTrue(game.isComplete());
-		} catch (BowlingException ex) {
-			ex.printStackTrace();
-			fail("Caught bowling exception: " + ex.getMessage());
-		}		
+		// 10th frame is spare
+		game = new BowlingGame();
+		for (int i = 0; i < 9; i++) {
+			game.addRoll(2);
+			game.addRoll(3);
+		}
+		assertEquals(10, game.getCurrentFrame());
+		assertEquals(1, game.getCurrentRoll());
+		game.addRoll(4);
+		assertTrue(!game.isComplete());
+
+		assertEquals(2, game.getCurrentRoll());
+		game.addRoll(6);
+		assertTrue(!game.isComplete());
+
+		assertEquals(11, game.getCurrentFrame());
+		assertEquals(1, game.getCurrentRoll());
+		game.addRoll(7);
+		assertTrue(game.isComplete());
+
+		// 10th frame is strike
+		game = new BowlingGame();
+		for (int i = 0; i < 9; i++) {
+			game.addRoll(2);
+			game.addRoll(3);
+		}
+
+		assertEquals(10, game.getCurrentFrame());
+		assertEquals(1, game.getCurrentRoll());
+		game.addRoll(10);
+		assertTrue(!game.isComplete());
+
+		// extra rolls count as 11th frame
+		assertEquals(11, game.getCurrentFrame());
+		assertEquals(1, game.getCurrentRoll());
+		game.addRoll(10);
+		assertTrue(!game.isComplete());
+
+		assertEquals(11, game.getCurrentFrame());
+		assertEquals(2, game.getCurrentRoll());
+		game.addRoll(10);
+		assertTrue(game.isComplete());
 	}
 
 	@Test
-	public void strikesAndSpares() {
+	public void strikesAndSpares() throws BowlingException {
 		BowlingGame game = new BowlingGame();
-		try{
-			game.addRoll(5);
-			assertTrue(!game.isSpare(1));
-			assertTrue(!game.isStrike(1));
-			
-			game.addRoll(5);
-			assertTrue(game.isSpare(1));
-			assertTrue(!game.isStrike(1));
 
-			game.addRoll(10);
-			assertTrue(!game.isSpare(2));
-			assertTrue(game.isStrike(2));
+		game.addRoll(5);
+		assertTrue(!game.isSpare(1));
+		assertTrue(!game.isStrike(1));
 
-		}catch(BowlingException ex) {
-			ex.printStackTrace();
-			fail("Caught bowling exception: " + ex.getMessage());			
-		}
+		game.addRoll(5);
+		assertTrue(game.isSpare(1));
+		assertTrue(!game.isStrike(1));
+
+		game.addRoll(10);
+		assertTrue(!game.isSpare(2));
+		assertTrue(game.isStrike(2));
 	}
 
- 
-	@Test 
-	public void score() throws BowlingException{
+	@Test
+	public void score() throws BowlingException {
 		BowlingGame game = new BowlingGame(new int[] { 10, 10, 10, 10, 10, 10,
 				10, 10, 10, 10, 10, 10 });
 		assertEquals(300, game.getScore());
-		
-		game = new BowlingGame(new int[] {
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-		});
+
+		game = new BowlingGame(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0 });
 		assertEquals(0, game.getScore());
 
-		game = new BowlingGame(new int[] {
-				1, 2, 3, 4, 5, 1, 2, 3, 4, 5,
-				1, 2, 3, 4, 5, 1, 2, 3, 4, 5
-		});
+		game = new BowlingGame(new int[] { 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2,
+				3, 4, 5, 1, 2, 3, 4, 5 });
 		assertEquals(60, game.getScore());
 
-		game = new BowlingGame(new int[] {
-				1, 2, 3, 4, 5, 1, 2, 3, 4, 5,
-				1, 2, 3, 4, 5, 1, 2, 3, 5, 5, 10
-		});
+		game = new BowlingGame(new int[] { 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2,
+				3, 4, 5, 1, 2, 3, 5, 5, 10 });
 		assertEquals(71, game.getScore());
 
-
-		game = new BowlingGame(new int[] {
-				0, 10, 1, 9, 2, 8, 3, 7, 4, 6,
-				5, 5, 6, 4, 7, 3, 8, 2, 9, 1, 10
-		});
+		game = new BowlingGame(new int[] { 0, 10, 1, 9, 2, 8, 3, 7, 4, 6, 5, 5,
+				6, 4, 7, 3, 8, 2, 9, 1, 10 });
 		assertEquals(155, game.getScore());
 
 		// last a strike
-		game = new BowlingGame(new int[] {
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10
-		});
+		game = new BowlingGame(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 10, 10, 10 });
 		assertEquals(30, game.getScore());
 
 		// last a spare
-		game = new BowlingGame(new int[] {
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 7
-		});
+		game = new BowlingGame(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 5, 5, 7 });
 		assertEquals(17, game.getScore());
 
 		// incomplete games
-		
-		game = new BowlingGame(new int[] {
-				10, 10, 10
-		});
+
+		game = new BowlingGame(new int[] { 10, 10, 10 });
 		assertEquals(60, game.getScore());
 
-		game = new BowlingGame(new int[] {
-				10, 10, 10, 5
-		});
+		game = new BowlingGame(new int[] { 10, 10, 10, 5 });
 		assertEquals(75, game.getScore());
 
-		game = new BowlingGame(new int[] {
-				1, 2, 3, 4
-		});
+		game = new BowlingGame(new int[] { 1, 2, 3, 4 });
 		assertEquals(10, game.getScore());
 
-		game = new BowlingGame(new int[] {
-				3, 7, 2, 8, 1
-		});
+		game = new BowlingGame(new int[] { 3, 7, 2, 8, 1 });
 		assertEquals(24, game.getScore());
-
 	}
-	
-	/*
-	 * @Test public void completeFrames() { BowlingGame2 game = new
-	 * BowlingGame2(new int[] { 10, 10, 10, 10, 10, 10, 10, 10, 10 });
-	 * assertEquals(300, game.getScore());
-	 * 
-	 * game = new BowlingGame2(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	 * 0, 0, 0, 0, 0, 0, 0, }); assertEquals(0, game.getScore()); }
-	 * 
-	 * public void incompleteFrames() { BowlingGame2 game = new BowlingGame2(); }
-	 * 
-	 * @Test public void invalidFrames() { BowlingGame2 game = new
-	 * BowlingGame2(new int[] { 10, 10, 10, 10, 10, 10, 10, 10, 10 });
-	 * 
-	 * }
-	 */
+
 }

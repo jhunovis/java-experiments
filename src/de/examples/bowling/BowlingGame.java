@@ -242,11 +242,11 @@ public class BowlingGame {
 				ex.printStackTrace();
 				System.err.println(ex.getMessage());
 			}
-			System.out.printf("Zwischenstand: %d%n", game.getScore());
 			if (game.isSpare(curFrame))
-				System.out.println("SPARE!");
+				System.out.print("SPARE! ");
 			else if (game.isStrike(curFrame))
-				System.out.println("STRIKE!");
+				System.out.print("STRIKE! ");
+			System.out.printf("Zwischenstand: %d%n", game.getScore());
 		} while (!game.isComplete());
 		System.out.printf("Endstand: %d%n", game.getScore());
 	}

@@ -6,7 +6,7 @@ import org.junit.Test;
 public class BowlingGameTest {
 
 	@Test
-	public void addingTooSmallRoll() {
+	public void invalidRolls() {
 		BowlingGame game;
 		boolean caught;
 
@@ -69,15 +69,24 @@ public class BowlingGameTest {
 		BowlingGame game = new BowlingGame();
 		try {
 			for (int i = 0; i < 9; i++) {
-				game.addRoll(2);
-				assert !game.isComplete();
+				assertEquals(i+1, game.getCurrentFrame());
+				assertEquals(1, game.getCurrentRoll());
+				game.addRoll(2);				
+				assertTrue(!game.isComplete());
+
+				assertEquals(2, game.getCurrentRoll());
 				game.addRoll(3);
-				assert !game.isComplete();				
+				assertTrue(!game.isComplete());
 			}
+			
+			assertEquals(10, game.getCurrentFrame());
+			assertEquals(1, game.getCurrentRoll());
 			game.addRoll(4);
-			assert !game.isComplete();
+			assertTrue(!game.isComplete());
+
+			assertEquals(2, game.getCurrentRoll());
 			game.addRoll(5);
-			assert game.isComplete();
+			assertTrue(game.isComplete());
 			
 			// 10th frame is spare
 			game = new BowlingGame();
@@ -85,10 +94,19 @@ public class BowlingGameTest {
 				game.addRoll(2);
 				game.addRoll(3);			
 			}
-			game.addRoll(4);
-			assert !game.isComplete();
+			assertEquals(10, game.getCurrentFrame());
+			assertEquals(1, game.getCurrentRoll());
+			game.addRoll(4);			
+			assertTrue(!game.isComplete());
+			
+			assertEquals(2, game.getCurrentRoll());
 			game.addRoll(6);
-			assert game.isComplete();
+			assertTrue(!game.isComplete());
+			
+			assertEquals(11, game.getCurrentFrame());
+			assertEquals(1, game.getCurrentRoll());
+			game.addRoll(7);
+			assertTrue(game.isComplete());
 
 			// 10th frame is strike
 			game = new BowlingGame();
@@ -96,12 +114,22 @@ public class BowlingGameTest {
 				game.addRoll(2);
 				game.addRoll(3);			
 			}
+			
+			assertEquals(10, game.getCurrentFrame());
+			assertEquals(1, game.getCurrentRoll());
+			game.addRoll(10);			
+			assertTrue(!game.isComplete());
+
+			// extra rolls count as 11th frame
+			assertEquals(11, game.getCurrentFrame());
+			assertEquals(1, game.getCurrentRoll());
+			game.addRoll(10);	
+			assertTrue(!game.isComplete());
+
+			assertEquals(11, game.getCurrentFrame());
+			assertEquals(2, game.getCurrentRoll());
 			game.addRoll(10);
-			assert !game.isComplete();
-			game.addRoll(10);
-			assert !game.isComplete();
-			game.addRoll(10);
-			assert game.isComplete();
+			assertTrue(game.isComplete());
 		} catch (BowlingException ex) {
 			ex.printStackTrace();
 			fail("Caught bowling exception: " + ex.getMessage());
@@ -113,16 +141,16 @@ public class BowlingGameTest {
 		BowlingGame game = new BowlingGame();
 		try{
 			game.addRoll(5);
-			assert !game.isSpare(0);
-			assert !game.isStrike(0);
+			assertTrue(!game.isSpare(1));
+			assertTrue(!game.isStrike(1));
 			
 			game.addRoll(5);
-			assert game.isSpare(0);
-			assert !game.isStrike(0);
+			assertTrue(game.isSpare(1));
+			assertTrue(!game.isStrike(1));
 
 			game.addRoll(10);
-			assert !game.isSpare(0);
-			assert game.isStrike(0);
+			assertTrue(!game.isSpare(2));
+			assertTrue(game.isStrike(2));
 
 		}catch(BowlingException ex) {
 			ex.printStackTrace();
@@ -132,8 +160,9 @@ public class BowlingGameTest {
 
  
 	@Test 
-	public void scoreValidGames() throws BowlingException{
-		BowlingGame game = new BowlingGame(new int[] {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10});
+	public void score() throws BowlingException{
+		BowlingGame game = new BowlingGame(new int[] { 10, 10, 10, 10, 10, 10,
+				10, 10, 10, 10, 10, 10 });
 		assertEquals(300, game.getScore());
 		
 		game = new BowlingGame(new int[] {
@@ -161,11 +190,41 @@ public class BowlingGameTest {
 		});
 		assertEquals(155, game.getScore());
 
+		// last a strike
 		game = new BowlingGame(new int[] {
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10
 		});
 		assertEquals(30, game.getScore());
+
+		// last a spare
+		game = new BowlingGame(new int[] {
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 7
+		});
+		assertEquals(17, game.getScore());
+
+		// incomplete games
+		
+		game = new BowlingGame(new int[] {
+				10, 10, 10
+		});
+		assertEquals(60, game.getScore());
+
+		game = new BowlingGame(new int[] {
+				10, 10, 10, 5
+		});
+		assertEquals(75, game.getScore());
+
+		game = new BowlingGame(new int[] {
+				1, 2, 3, 4
+		});
+		assertEquals(10, game.getScore());
+
+		game = new BowlingGame(new int[] {
+				3, 7, 2, 8, 1
+		});
+		assertEquals(24, game.getScore());
 
 	}
 	

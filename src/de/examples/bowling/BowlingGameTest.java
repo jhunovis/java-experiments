@@ -103,8 +103,8 @@ public class BowlingGameTest {
 		game.addRoll(6);
 		assertTrue(!game.isComplete());
 
-		assertEquals(11, game.getCurrentFrame());
-		assertEquals(1, game.getCurrentRoll());
+		assertEquals(10, game.getCurrentFrame());
+		assertEquals(3, game.getCurrentRoll());
 		game.addRoll(7);
 		assertTrue(game.isComplete());
 
@@ -120,14 +120,13 @@ public class BowlingGameTest {
 		game.addRoll(10);
 		assertTrue(!game.isComplete());
 
-		// extra rolls count as 11th frame
-		assertEquals(11, game.getCurrentFrame());
-		assertEquals(1, game.getCurrentRoll());
+		assertEquals(10, game.getCurrentFrame());
+		assertEquals(2, game.getCurrentRoll());
 		game.addRoll(10);
 		assertTrue(!game.isComplete());
 
-		assertEquals(11, game.getCurrentFrame());
-		assertEquals(2, game.getCurrentRoll());
+		assertEquals(10, game.getCurrentFrame());
+		assertEquals(3, game.getCurrentRoll());
 		game.addRoll(10);
 		assertTrue(game.isComplete());
 	}

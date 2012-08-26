@@ -3,7 +3,6 @@ package de.examples.bowling;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-
 public class BowlingGame {
 
 	/*
@@ -28,10 +27,10 @@ public class BowlingGame {
 	};
 
 	private int mCurrentFrame = 0;
-	private FrameState[] mFrameState = new FrameState[11];
+	private FrameState[] mFrameState = new FrameState[10];
 
 	{
-		for (int i = 0; i < 11; i++)
+		for (int i = 0; i < 10; i++)
 			mFrameState[i] = FrameState.NOT_ROLLED;
 	}
 
@@ -66,11 +65,9 @@ public class BowlingGame {
 			switch (mFrameState[mCurrentFrame]) {
 			case SPARE:
 				mExtraRolls = 1;
-				mCurrentFrame = 10;
 				break;
 			case STRIKE:
 				mExtraRolls = 2;
-				mCurrentFrame = 10;
 				break;
 			default:
 				break;
@@ -100,7 +97,6 @@ public class BowlingGame {
 			// extra rolls.
 			mRolls[mCurrentRoll++] = roll;
 			mExtraRolls--;
-			mFrameState[mCurrentFrame] = FrameState.FIRST_ROLLED;
 		} else if (mFrameState[mCurrentFrame] != FrameState.FIRST_ROLLED) {
 			// first roll
 			mRolls[mCurrentRoll++] = roll;
@@ -200,10 +196,16 @@ public class BowlingGame {
 	/**
 	 * Return the current roll of the active frame.
 	 * 
-	 * @return 1 for the first roll, 2 for the second.
+	 * @return 1 for the first roll, 2 for the second. The last frame may has a
+	 *         third roll, if it was a spare or strike.
 	 */
 	public int getCurrentRoll() {
-		return (mFrameState[mCurrentFrame] == FrameState.FIRST_ROLLED) ? 2 : 1;
+		if (mFramesComplete) {
+			// This awkward piece counts the roll of last last frame, which my be up to 3. 
+			return (mFrameState[mCurrentFrame] == FrameState.SPARE) ? 3 : 4-mExtraRolls;
+		} else {
+			return (mFrameState[mCurrentFrame] == FrameState.FIRST_ROLLED) ? 2 : 1;
+		} 
 	}
 
 	/**
@@ -211,9 +213,7 @@ public class BowlingGame {
 	 * recorded for.
 	 * 
 	 * @return The number of the active frame, starting with 1 for the first
-	 *         frame. If there are rolls need to complete the game after a
-	 *         strike or spare in the 10th frame, these will be counted as if in
-	 *         the 11th frame.
+	 *         frame.
 	 */
 	public int getCurrentFrame() {
 		return mCurrentFrame + 1;

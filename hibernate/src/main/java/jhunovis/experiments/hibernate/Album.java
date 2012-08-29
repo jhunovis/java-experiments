@@ -23,6 +23,7 @@ public class Album implements Serializable{
 		public int getId() {
 			return mId;
 		}
+		
 		public void setId(int id) {
 			mId = id;
 		}

@@ -42,7 +42,8 @@ public class Picture {
 	 * 
 	 * Leaving away the "mappedBy" will cause another link table to be created,
 	 * instead of the "derivatives" table to be used.
-	 * Todo: play with all possibilities show the resulting tables in blog posting.
+	 * 
+	 * TODO: play with all possibilities show the resulting tables in blog posting.
 	 */
 	@OneToMany(mappedBy="derivedOf")
 	private List<Picture> derivatives = null;
@@ -88,6 +89,14 @@ public class Picture {
 	 * This is the one-end of a bidirectional association and must name the
 	 * owner of the association. It suffices to name the property in the other
 	 * end that owns this association with the {@code mappedBy} annotation.
+	 * 
+	 * The many end must own this relation ship. Otherwise redundancy would 
+	 * be caused. Imagine a picture that has two comments. If the picture table
+	 * would refer to the keys of both comments, two rows for a single picture 
+	 * would have to be created in the pictures table. All the other attributes
+	 * of that picture would be duplicated.
+	 * 
+	 * TODO: demonstrate!
 	 */
 	@OneToMany(mappedBy = "picture")
 	private List<Comment> comments = null;

@@ -46,7 +46,7 @@ public class Picture {
 	private URL file;
 
 	// Complex attribute; will still be embedded; see its class!
-	@Embedded private GeoLocationWithAltitude geoLocation = null;
+	@Embedded private GeoLocation geoLocation = null;
 
 	/**
 	 * The (first-level) comments on this picture.
@@ -93,11 +93,11 @@ public class Picture {
 		this.file = file;
 	}
 
-	public GeoLocationWithAltitude getGeoLocation() {
+	public GeoLocation getGeoLocation() {
 		return geoLocation;
 	}
 
-	public void setGeoLocation(GeoLocationWithAltitude geoLocation) {
+	public void setGeoLocation(GeoLocation geoLocation) {
 		this.geoLocation = geoLocation;
 	}
 

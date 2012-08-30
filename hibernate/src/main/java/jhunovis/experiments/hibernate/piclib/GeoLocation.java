@@ -22,8 +22,12 @@ import javax.persistence.MappedSuperclass;
  * The approach demonstrate here will simply mark all primitive attributes as
  * {@code nullable}.
  * 
- * Also not the {@link MappedSuperclass} annotation. Without it the fields of
- * this class will not be persisted when a field of a sub-class type is used!
+ * Also note the {@link MappedSuperclass} annotation. Without it the fields of
+ * this class will not be persisted when a field of a sub-class type is used! Still,
+ * polymorphism is not available. (or is it?)
+ * 
+ * Another interesting thing is, that embeddable classes do not need to be
+ * registered in your hibernate.cfg.xml.
  */
 @Embeddable
 @MappedSuperclass

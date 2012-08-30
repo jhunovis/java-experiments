@@ -19,7 +19,7 @@ public class Comment {
 
 	@Id
 	@GeneratedValue
-	private int commentId;
+	private int id;
 
 	/** The actual comment text. */
 	private String comment;
@@ -38,12 +38,8 @@ public class Comment {
 	@ManyToOne
 	private Picture picture;
 
-	public int getCommentId() {
-		return commentId;
-	}
-
-	public void setCommentId(int commentId) {
-		this.commentId = commentId;
+	public int getId() {
+		return id;
 	}
 
 	public String getComment() {

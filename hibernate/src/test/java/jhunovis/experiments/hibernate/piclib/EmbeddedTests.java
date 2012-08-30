@@ -3,7 +3,6 @@ package jhunovis.experiments.hibernate.piclib;
 import static org.junit.Assert.*;
 
 import org.hibernate.Session;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 
 public class EmbeddedTests extends TestBase {

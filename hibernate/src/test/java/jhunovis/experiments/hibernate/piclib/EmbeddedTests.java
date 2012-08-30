@@ -6,13 +6,14 @@ import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 
-public class EmbeddedTests extends BaseTests {
+public class EmbeddedTests extends TestBase {
 	
 	@Test
 	public void nullableFields() {
 
 		Session session = mSessionFactory.openSession();
 		session.beginTransaction();
+
 		int picId;
 		Picture picture = new Picture();
 		// store a null value for the embedded geo-location.

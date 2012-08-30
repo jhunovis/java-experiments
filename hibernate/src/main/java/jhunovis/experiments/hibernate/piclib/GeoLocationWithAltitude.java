@@ -65,5 +65,19 @@ public class GeoLocationWithAltitude extends GeoLocation {
 	public int hashCode() {
 		return new Double(altitude).hashCode() ^ super.hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder(50);
+		builder.append("(")
+			.append(getLatitude())
+			.append(", ")
+			.append(getLongitude())
+			.append(", ")
+			.append(altitude)
+			.append(")");
+		return builder.toString();
+	}
+	
 
 }

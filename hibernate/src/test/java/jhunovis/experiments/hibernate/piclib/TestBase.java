@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class BaseTests {
+public abstract class TestBase {
 
 	protected static SessionFactory mSessionFactory;
 	protected final Logger logger = LoggerFactory
@@ -26,7 +26,7 @@ public abstract class BaseTests {
 		}
 	}
 
-	public BaseTests() {
+	public TestBase() {
 		super();
 	}
 

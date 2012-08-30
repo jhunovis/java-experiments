@@ -36,6 +36,8 @@
         <mapping class="jhunovis.experiments.hibernate.piclib.Comment"/>
         <mapping class="jhunovis.experiments.hibernate.piclib.Picture"/>
         <mapping class="jhunovis.experiments.hibernate.piclib.User"/>
+        <mapping class="jhunovis.experiments.hibernate.piclib.GeoLocation"/>
+        <mapping class="jhunovis.experiments.hibernate.piclib.GeoLocationWithAltitude"/>
            
 
     </session-factory>

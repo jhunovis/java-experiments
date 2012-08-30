@@ -11,7 +11,7 @@ import org.hibernate.id.IdentifierGenerationException;
 import org.junit.Test;
 
 
-public class BasicTests extends BaseTests {
+public class BasicTests extends TestBase {
 
 	/**
 	 * Test Hibernate's basic functions for saving entities, and for restoring

@@ -2,8 +2,6 @@ package jhunovis.experiments.hibernate.piclib;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -67,7 +65,7 @@ public class GeoLocation {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o != null && o instanceof GeoLocationWithAltitude) {
+		if (o != null && o instanceof GeoLocation) {
 			GeoLocation other = (GeoLocation) o;
 			return Double.compare(other.latitude, latitude) == 0
 					&& Double.compare(other.longitude, longitude) == 0;
@@ -80,6 +78,17 @@ public class GeoLocation {
 	public int hashCode() {
 		return new Double(latitude).hashCode()
 				^ new Double(longitude).hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder(50);
+		builder.append("(")
+			.append(latitude)
+			.append(", ")
+			.append(longitude)
+			.append(")");
+		return builder.toString();
 	}
 
 }

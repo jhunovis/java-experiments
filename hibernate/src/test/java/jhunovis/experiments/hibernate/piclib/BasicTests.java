@@ -10,7 +10,6 @@ import org.hibernate.exception.DataException;
 import org.hibernate.id.IdentifierGenerationException;
 import org.junit.Test;
 
-
 public class BasicTests extends TestBase {
 
 	/**
@@ -27,7 +26,7 @@ public class BasicTests extends TestBase {
 
 		int picId;
 		String descr = "First Picture";
-		GeoLocationWithAltitude geoLoc = new GeoLocationWithAltitude(1d, 2d, 3d);
+		GeoLocation geoLoc = new GeoLocation(1d, 2d);
 		URL url = new URL("file:///tmp/none");
 
 		Picture picture = new Picture();
@@ -36,6 +35,8 @@ public class BasicTests extends TestBase {
 		picture.setGeoLocation(geoLoc);
 
 		session.save(picture);
+		// the generated id will be available only for instances attach to a
+		// persistence context
 		picId = picture.getId();
 
 		session.getTransaction().commit();
@@ -135,44 +136,5 @@ public class BasicTests extends TestBase {
 		session.close();
 
 	}
-
-	/**
-	 * Associating objects with each other will not automatically persist the
-	 * whole network one one end is saved. You must enabled this by use of the
-	 * {@code cascade} property.
-	 */
-	@Test
-	public void cascading() {
-		Session session = mSessionFactory.openSession();
-		session.beginTransaction();
-
-		// create a picture and an associated comment
-		// but only persist the picture explicitly
-		int picId;
-		Picture picture = new Picture();
-		picture.setDescription("Commented Picture");
-
-		Comment comment = new Comment();
-		comment.setComment("Nice one!");
-		comment.setPicture(picture);
-		picture.addComment(comment);
-		
-		session.save(picture);
-		picId = picture.getId();
-
-		session.getTransaction().commit();
-		session.close();
-
-		// restore by id
-		session = mSessionFactory.openSession();
-		session.beginTransaction();
-
-		picture = (Picture) session.load(Picture.class, picId);
-		assertEquals("Nice One!", picture.getComments().get(0));
-
-		session.close();
-
-	}
-	
 
 }

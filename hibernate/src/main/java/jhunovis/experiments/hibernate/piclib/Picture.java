@@ -10,6 +10,9 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -25,18 +28,48 @@ public class Picture {
 	private int id;
 
 	/**
-	 * This is a many-to-one relationship: many pictures may be derived of one
-	 * original picture, e.g. by apply different filters to it.
+	 * This is a bidirectional many-to-one relationship: many pictures may be
+	 * derived of one original picture, e.g. by apply different filters to it.
 	 * 
 	 * The "many" end of the association has to be the owner of the association.
 	 * The owner can be designated via either "inverse" or "mappedBy". In this
 	 * case I opt for mappedBy.
+	 * 
+	 * This association shall be stored in a dedicated table. The name attribute
+	 * is mandatory if used on the to-one end. But since Hibernate will construct
+	 * the name from the joined types instead of the field names, explicitly naming
+	 * the table seems to be sensible anyway.
+	 * 
+	 * Leaving away the "mappedBy" will cause another link table to be created,
+	 * instead of the "derivatives" table to be used.
+	 * Todo: play with all possibilities show the resulting tables in blog posting.
 	 */
-	@Transient
+	@OneToMany(mappedBy="derivedOf")
 	private List<Picture> derivatives = null;
-	@Transient
+	
+	@ManyToOne
+	@JoinTable(name="derivatives",
+		joinColumns= {@JoinColumn(name="original_fkey")},
+		inverseJoinColumns={@JoinColumn(name="derived_fkey")})
 	private Picture derivedOf = null;
 
+	public Picture getDerivedOf() {
+		return derivedOf;
+	}
+
+	public void setDerivedOf(Picture derivedOf) {
+		this.derivedOf = derivedOf;
+	}
+
+	public List<Picture> getDerivatives() {
+		return derivatives;
+	}
+
+	public void addDerived(Picture derived) {
+		if (derivatives == null) derivatives = new ArrayList<Picture>();
+		derivatives.add(derived);
+	}
+	
 	@Transient
 	private Map<String, Date> timeStamps = null;
 
@@ -46,7 +79,8 @@ public class Picture {
 	private URL file;
 
 	// Complex attribute; will still be embedded; see its class!
-	@Embedded private GeoLocation geoLocation = null;
+	@Embedded
+	private GeoLocation geoLocation = null;
 
 	/**
 	 * The (first-level) comments on this picture.

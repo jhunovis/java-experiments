@@ -15,25 +15,28 @@ public class AssociationTests extends TestBase {
 		Session session = mSessionFactory.openSession();
 		session.beginTransaction();
 
-		int picId;
-		Picture picture = new Picture();
-		picture.setGeoLocation(new GeoLocation());
+		int originalId, derivedId;
+		Picture original = new Picture();
+		original.setGeoLocation(new GeoLocation());
+		original.setDescription("The original");
 
-		Comment comment = new Comment();
-		comment.setComment("Awesome!");
+		Picture derived = new Picture();
+		derived.setGeoLocation(new GeoLocation());
+		derived.setDescription("Derived work");
 
 		// establish link
-		comment.setPicture(picture);
-		picture.addComment(comment);
+		original.addDerived(derived);
+		derived.setDerivedOf(original);
 
 		// Saving one end of an association will not automatically save the
 		// other end as well. For this, cascading must be configured.
-		session.save(picture);
-		session.save(comment);
+		session.save(original);
+		session.save(derived);
 
 		// As usual the id is only available after the instance has been
 		// attached to a persistence context.
-		picId = picture.getId();
+		originalId = original.getId();
+		derivedId = derived.getId();
 
 		session.getTransaction().commit();
 		session.close();
@@ -42,9 +45,14 @@ public class AssociationTests extends TestBase {
 		session = mSessionFactory.openSession();
 		session.beginTransaction();
 
-		picture = (Picture) session.load(Picture.class, picId);
-		assertEquals("Awesome!", picture.getComments().get(0).getComment());
-
+		original = (Picture) session.load(Picture.class, originalId);
+		assertEquals("The original", original.getDescription());
+		assertEquals("Derived work", original.getDerivatives().get(0).getDescription());
+		
+		derived = (Picture) session.load(Picture.class, derivedId);
+		assertEquals("The original", derived.getDerivedOf().getDescription());
+		
+		session.getTransaction().commit();
 		session.close();
 
 	}
@@ -55,7 +63,7 @@ public class AssociationTests extends TestBase {
 	 * {@code cascade} property.
 	 */
 	@Test
-	public void cascading() {
+	public void saveCascade() {
 		Session session = mSessionFactory.openSession();
 		session.beginTransaction();
 
@@ -88,6 +96,49 @@ public class AssociationTests extends TestBase {
 		// comment has never been stored
 		comment = (Comment) session.get(Comment.class, commentId);
 		assertNull(comment);
+
+		session.close();
+
+	}
+
+
+	/** Demonstrates how to correctly store a bidirectional one-to-many link.
+	 */
+	@Test
+	public void deleteCascade() {
+
+		Session session = mSessionFactory.openSession();
+		session.beginTransaction();
+
+		int picId;
+		Picture picture = new Picture();
+		picture.setGeoLocation(new GeoLocation());
+
+		Comment comment = new Comment();
+		comment.setComment("Awesome!");
+
+		// establish link
+		comment.setPicture(picture);
+		picture.addComment(comment);
+
+		// Saving one end of an association will not automatically save the
+		// other end as well. For this, cascading must be configured.
+		session.save(picture);
+		session.save(comment);
+
+		// As usual the id is only available after the instance has been
+		// attached to a persistence context.
+		picId = picture.getId();
+
+		session.getTransaction().commit();
+		session.close();
+
+		// restore by id
+		session = mSessionFactory.openSession();
+		session.beginTransaction();
+
+		picture = (Picture) session.load(Picture.class, picId);
+		assertEquals("Awesome!", picture.getComments().get(0).getComment());
 
 		session.close();
 

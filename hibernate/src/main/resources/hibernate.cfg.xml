@@ -33,7 +33,9 @@
 
         
         <mapping class="jhunovis.experiments.hibernate.Album"/>
+        <mapping class="jhunovis.experiments.hibernate.piclib.Comment"/>
         <mapping class="jhunovis.experiments.hibernate.piclib.Picture"/>
+        <mapping class="jhunovis.experiments.hibernate.piclib.User"/>
            
 
     </session-factory>

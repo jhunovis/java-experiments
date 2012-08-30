@@ -39,5 +39,6 @@
   <modules>
     <module>hibernate</module>
     <module>bowling</module>
+    <module>spring</module>
   </modules>
 </project>
